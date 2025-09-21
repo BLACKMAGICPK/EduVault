@@ -11,7 +11,7 @@ import APP_PS from "./Screens/APP_PS" ;
 import CC_PS from "./Screens/CC_PS" ;
 import CS_PS from "./Screens/CS_PS" ;
 import ARVR_PS from "./Screens/ARVR_PS";
-import Registeration from "./Screens/Registeration";
+import Registeration from "./Screens/registerationclose";
 import Login from "./Screens/login";
 import Profile from "./Screens/Profile";
 import ForgotPassword from "./Screens/ForgotPassword";
