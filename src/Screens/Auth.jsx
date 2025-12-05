@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 function AuthPage() {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [activeRole, setActiveRole] = useState("Student"); // new state
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -13,6 +17,22 @@ function AuthPage() {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
+
+  const credentials = {
+      Student: {
+        email: "student@gmail.com",
+        password: "student123"
+      },
+      Admin: {
+        email: "admin@gmail.com",
+        password: "admin123"
+      },
+      Verifier: {
+        email: "verifier@gmail.com",
+        password: "verifier123"
+      }
+    };
+
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -24,48 +44,53 @@ function AuthPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    let newErrors = {};
+ const handleSubmit = (e) => {
+  e.preventDefault();
+  let newErrors = {};
 
-    if (!formData.email.includes("@")) newErrors.email = "Invalid email address";
-    if (formData.password.length < 6)
-      newErrors.password = "Password must be at least 6 characters";
-    if (!isLogin && formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match";
+  if (!formData.email.includes("@")) newErrors.email = "Invalid email address";
+  if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+  if (!isLogin && formData.password !== formData.confirmPassword)
+    newErrors.confirmPassword = "Passwords do not match";
 
-    setErrors(newErrors);
+  setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      alert(`${isLogin ? "Login" : "Signup"} successful! Redirecting...`);
+  if (Object.keys(newErrors).length !== 0) return;
+
+  if (isLogin) {
+    const fixed = credentials[activeRole];
+
+    if (
+      formData.email === fixed.email &&
+      formData.password === fixed.password
+    ) {
+      alert(`${activeRole} Login Successful! Redirecting...`);
+
+
+      if (activeRole === "Student") navigate("/student-dashboard");
+      if (activeRole === "Admin") navigate("/admin-dashboard");
+      if (activeRole === "Verifier") navigate("/verifier-dashboard");
+    } else {
+      alert("Invalid Credentials for " + activeRole);
     }
-  };
+  } else {
+  
+    alert(`${activeRole} Signup successful! Redirecting...`);
+  }
+};
 
   return (
     <>
       <Navbar />
 
       <style>{`
-
-      /* Hide browser's default eye icon in password fields */
         input[type="password"]::-ms-reveal,
-        input[type="password"]::-ms-clear {
-        display: none;
-        }
-
-        input[type="password"]::-webkit-credentials-auto-fill-button,
-        input[type="password"]::-webkit-textfield-decoration-container,
+        input[type="password"]::-ms-clear,
         input[type="password"]::-webkit-clear-button,
         input[type="password"]::-webkit-inner-spin-button,
         input[type="password"]::-webkit-outer-spin-button {
-        display: none !important;
-        -webkit-appearance: none;
+          display: none !important;
         }
-
-        input[type="password"]::-webkit-textfield-decoration-container {
-        display: none !important;
-        }
-
 
         :root {
           --burgundy: #800020;
@@ -75,50 +100,42 @@ function AuthPage() {
           --charcoal: #2e2e2e;
         }
 
-        body {
-          background-color: var(--white);
+        .auth-container {
+          font-family: 'Poppins', sans-serif;
+          min-height: 90vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 20px;
+          background: linear-gradient(145deg, #660019 0%, #800020 25%, #a52a2a 50%, #d4af37 90%);
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-size: cover;
+          position: relative;
+          overflow: hidden;
         }
-.auth-container {
-  font-family: 'Poppins', sans-serif;
-  min-height: 90vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  background: linear-gradient(145deg, #660019 0%, #800020 25%, #a52a2a 50%, #d4af37 90%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  position: relative;
-  overflow: hidden;
-}
 
-/* ✨ Elegant patterned overlay (finer, soft premium lines) */
-.auth-container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(-120deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  opacity: 0.5;
-  pointer-events: none;
-}
+        .auth-container::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(120deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(-120deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+          background-size: 60px 60px;
+          opacity: 0.5;
+          pointer-events: none;
+        }
 
-/* ✨ Soft premium border with slight gold highlight */
-.auth-container::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 1.5px solid rgba(212, 175, 55, 0.3);
-
-  box-shadow:
-    0 0 20px rgba(212, 175, 55, 0.1),
-    inset 0 0 40px rgba(128, 0, 32, 0.25);
-  pointer-events: none;
-}
-
+        .auth-container::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border: 1.5px solid rgba(212, 175, 55, 0.3);
+          box-shadow: 0 0 20px rgba(212, 175, 55, 0.1),
+                      inset 0 0 40px rgba(128, 0, 32, 0.25);
+          pointer-events: none;
+        }
 
         .auth-card {
           background: var(--burgundy);
@@ -137,16 +154,16 @@ function AuthPage() {
           box-shadow: 0 12px 36px rgba(0,0,0,0.25);
         }
 
-        .tabs {
+        .tabs, .role-tabs {
           display: flex;
           justify-content: center;
           background: rgba(255, 255, 255, 0.1);
           border-radius: 12px;
-          margin-bottom: 30px;
           overflow: hidden;
+          margin-bottom: 20px;
         }
 
-        .tab-btn {
+        .tab-btn, .role-btn {
           flex: 1;
           padding: 12px 0;
           border: none;
@@ -158,9 +175,13 @@ function AuthPage() {
           transition: all 0.3s ease;
         }
 
-        .tab-btn.active {
+        .tab-btn.active, .role-btn.active {
           background: var(--gold);
           color: var(--burgundy);
+        }
+
+        .role-tabs {
+          margin-bottom: 30px;
         }
 
         .form-group {
@@ -193,10 +214,6 @@ function AuthPage() {
           box-shadow: 0 0 6px rgba(244,197,66,0.8);
         }
 
-        .password-field {
-          position: relative;
-        }
-
         .toggle-password {
           position: absolute;
           top: 75%;
@@ -204,9 +221,7 @@ function AuthPage() {
           transform: translateY(-50%);
           cursor: pointer;
           color: var(--burgundy);
-          
           padding: 5px;
-          
           transition: all 0.3s ease;
         }
 
@@ -264,7 +279,7 @@ function AuthPage() {
 
       <div className="auth-container">
         <div className="auth-card">
-          {/* ===== Tabs ===== */}
+     
           <div className="tabs">
             <button
               className={`tab-btn ${isLogin ? "active" : ""}`}
@@ -280,7 +295,20 @@ function AuthPage() {
             </button>
           </div>
 
-          {/* ===== Form ===== */}
+ 
+          <div className="role-tabs">
+            {["Student", "Admin", "Verifier"].map((role) => (
+              <button
+                key={role}
+                className={`role-btn ${activeRole === role ? "active" : ""}`}
+                onClick={() => setActiveRole(role)}
+              >
+                {role}
+              </button>
+            ))}
+          </div>
+
+ 
           <form onSubmit={handleSubmit}>
             {!isLogin && (
               <div className="form-group">
@@ -316,15 +344,14 @@ function AuthPage() {
                 value={formData.password}
                 onChange={handleChange}
               />
-            {formData.password && (
-                    <span
-                        className="toggle-password"
-                        onClick={() => setShowPassword(!showPassword)}
-                    >
-                        {showPassword ? <FaEyeSlash /> : <FaEye />}
-                    </span>
-                    )}
-
+              {formData.password && (
+                <span
+                  className="toggle-password"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              )}
               {errors.password && <div className="error">{errors.password}</div>}
             </div>
 
@@ -351,7 +378,7 @@ function AuthPage() {
             )}
 
             <button type="submit" className="submit-btn">
-              {isLogin ? "Log In" : "Sign Up"}
+              {activeRole} {isLogin ? "Log In" : "Sign Up"}
             </button>
           </form>
         </div>

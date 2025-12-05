@@ -4,13 +4,12 @@ import logo from "../image/eduvault_logo_bg.png";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // toggle manually
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
     <>
-      {/* ======= Google Font ======= */}
       <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap"
         rel="stylesheet"
@@ -34,16 +33,15 @@ function Navbar() {
           font-family: 'Poppins', sans-serif;
         }
 
-      .navbar-container {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 14px 32px; /* You can reduce or remove horizontal padding if needed */
-        box-sizing: border-box;
+        .navbar-container {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 14px 32px;
+          box-sizing: border-box;
         }
 
-        /* === Logo === */
         .logo-link {
           display: flex;
           align-items: center;
@@ -64,7 +62,7 @@ function Navbar() {
           letter-spacing: 1px;
         }
 
-        /* === Links === */
+
         .nav-links {
           list-style: none;
           display: flex;
@@ -84,7 +82,7 @@ function Navbar() {
           color: var(--gold);
         }
 
-        /* === Login/Signup Button Group === */
+      
         .auth-buttons {
           display: flex;
           align-items: center;
@@ -99,7 +97,6 @@ function Navbar() {
           padding: 8px 18px;
           border-radius: 25px;
           font-weight: 600;
-         
           transition: all 0.3s ease;
           text-decoration: none;
           border: 2px solid var(--gold);
@@ -111,9 +108,7 @@ function Navbar() {
           box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
         }
 
-        
         .btn-signup {
-          border: 2px solid var(--gold);
           background: transparent;
           color: var(--gold);
         }
@@ -123,7 +118,7 @@ function Navbar() {
           color: var(--burgundy);
         }
 
-        /* === Dropdown === */
+
         .dropdown {
           position: relative;
         }
@@ -150,6 +145,10 @@ function Navbar() {
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
+        .dropdown:hover .dropdown-content {
+          display: block;
+        }
+
         .dropdown-content a,
         .dropdown-content button {
           display: block;
@@ -168,63 +167,105 @@ function Navbar() {
           background-color: rgba(255, 215, 0, 0.15);
         }
 
-        .dropdown:hover .dropdown-content {
-          display: block;
-        }
-
-        /* === Hamburger === */
+     
         .hamburger {
           display: none;
           flex-direction: column;
+          justify-content: center;
+          align-items: center;
           cursor: pointer;
+          width: 32px;
+          height: 32px;
+          position: relative;
+          z-index: 1200;
         }
 
         .bar {
           height: 3px;
-          width: 25px;
+          width: 28px;
           background-color: var(--gold);
-          margin: 4px 0;
-          transition: 0.3s;
+          margin: 2.25px 0;
+          border-radius: 10px;
+          transition: all 0.3s ease;
         }
 
-        /* === Responsive === */
+        .hamburger.open .bar:nth-child(1) {
+          transform: rotate(45deg) translateY(10px);
+        }
+
+        .hamburger.open .bar:nth-child(2) {
+          opacity: 0;
+        }
+
+        .hamburger.open .bar:nth-child(3) {
+          transform: rotate(-45deg) translateY(-10px);
+        }
+
         @media (max-width: 768px) {
           .hamburger {
             display: flex;
           }
 
           .nav-links {
+            display: none;
+          }
+
+          .mobile-menu {
             position: absolute;
-            top: 64px;
-            left: 0;
+            top: 75px;
+            right: 20px;
+            background: rgba(128, 0, 32, 0.95);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(244, 197, 66, 0.4);
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+            animation: fadeIn 0.3s ease forwards;
+            z-index: 1100;
+            align-items: center;
+          }
+
+          .mobile-menu a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            align-items: center;
+            
+          }
+
+          .mobile-menu a:hover {
+            color: var(--gold);
+          }
+
+          .mobile-menu .auth-buttons {
+            flex-direction: column;
+            align-items: stretch;
             width: 100%;
-            background-color: var(--burgundy);
-            flex-direction: column;
-            text-align: center;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
-          }
-
-          .nav-links.active {
-            max-height: 300px;
-            padding: 16px 0;
-          }
-
-          .nav-links li {
-            margin: 12px 0;
-          }
-
-          .auth-buttons {
-            flex-direction: column;
             margin-left: 0;
+            gap: 10px;
+            text-align: center;
+          }
+
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
         }
       `}</style>
 
       <header className="navbar">
         <nav className="navbar-container">
-          {/* === Logo === */}
           <div className="navbar-logo">
             <Link to="/" className="logo-link">
               <img src={logo} alt="EduVault Logo" className="logo-img" />
@@ -232,51 +273,60 @@ function Navbar() {
             </Link>
           </div>
 
-          {/* === Nav Links === */}
-          <ul className={`nav-links ${isOpen ? "active" : ""}`}>
-            <li>
-              <Link to="/" onClick={toggleMenu}>Home</Link>
-            </li>
-            <li>
-              <Link to="/about" onClick={toggleMenu}>About</Link>
-            </li>
-            <li>
-              <Link to="/contact" onClick={toggleMenu}>Contact</Link>
-            </li>
 
+          <ul className="nav-links">
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
             {!isLoggedIn ? (
               <div className="auth-buttons">
-                <Link to="/auth" className="btn-login" onClick={toggleMenu}>
-                  Login
-                </Link>
-                <Link to="/auth" className="btn-signup" onClick={toggleMenu}>
-                  Sign Up
-                </Link>
+                <Link to="/auth" className="btn-login">Login</Link>
+                <Link to="/auth" className="btn-signup">Sign Up</Link>
               </div>
             ) : (
               <li className="dropdown">
                 <button className="dropdown-btn">Profile ▾</button>
                 <div className="dropdown-content">
                   <Link to="/profile">Dashboard</Link>
-                  <button
-                    onClick={() => {
-                      setIsLoggedIn(false);
-                      toggleMenu();
-                    }}
-                  >
-                    Logout
-                  </button>
+                  <button onClick={() => setIsLoggedIn(false)}>Logout</button>
                 </div>
               </li>
             )}
           </ul>
 
-          {/* === Hamburger === */}
-          <div className="hamburger" onClick={toggleMenu}>
+       
+          <div className={`hamburger ${isOpen ? "open" : ""}`} onClick={toggleMenu}>
             <div className="bar"></div>
             <div className="bar"></div>
             <div className="bar"></div>
           </div>
+
+          {isOpen && (
+            <div className="mobile-menu">
+              <Link to="/" onClick={toggleMenu}>Home</Link>
+              <Link to="/about" onClick={toggleMenu}>About</Link>
+              <Link to="/contact" onClick={toggleMenu}>Contact</Link>
+              {!isLoggedIn ? (
+                <div className="auth-buttons">
+                  <Link to="/auth" className="btn-login" onClick={toggleMenu}>Login</Link>
+                  <Link to="/auth" className="btn-signup" onClick={toggleMenu}>Sign Up</Link>
+                </div>
+              ) : (
+                <>
+                  <Link to="/profile" onClick={toggleMenu}>Dashboard</Link>
+                  <button
+                    onClick={() => {
+                      setIsLoggedIn(false);
+                      toggleMenu();
+                    }}
+                    className="btn-signup"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </nav>
       </header>
     </>

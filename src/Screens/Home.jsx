@@ -33,15 +33,15 @@ function Home() {
                         url(${heroImage}) center/cover no-repeat;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;     /* Move content to left */
+            align-items: flex-start;     
             justify-content: center;
-            text-align: left;            /* Align text left */
+            text-align: left;           
             color: var(--white);
-            padding: 20px 10% 20px 10%;  /* Add side spacing */
+            padding: 20px 10% 20px 10%; 
             }
 
             .hero h1, .hero p, .cta-button {
-            max-width: 600px;           /* Keep content compact */
+            max-width: 600px;          
             }
 
         .hero h1 {
@@ -81,7 +81,6 @@ function Home() {
           transform: scale(1.05);
         }
 
-        /* ===== FEATURES ===== */
         .features {
           background-color: var(--offwhite);
           padding: 70px 20px;
@@ -137,7 +136,6 @@ function Home() {
           font-size: 1.3rem;
         }
 
-        /* ===== HOW IT WORKS ===== */
         .how-it-works {
           background-color: var(--burgundy);
           color: var(--white);
@@ -202,7 +200,6 @@ function Home() {
           50% { transform: translateX(10px); opacity: 0.7; }
         }
 
-        /* ===== ABOUT/PARTNERS ===== */
         .about-partners {
           background-color: var(--offwhite);
           padding: 70px 20px;
@@ -253,7 +250,7 @@ function Home() {
       `}</style>
 
       <div className="home-container">
-        {/* ===== HERO SECTION ===== */}
+        
         <section className="hero">
           <h1>Secure Blockchain Degree Verification</h1>
           <p>
@@ -265,7 +262,6 @@ function Home() {
           </a>
         </section>
 
-        {/* ===== FEATURES ===== */}
         <section className="features">
           <h2>Why Choose EduVault?</h2>
           <div className="feature-cards">
@@ -292,7 +288,7 @@ function Home() {
           </div>
         </section>
 
-        {/* ===== HOW IT WORKS ===== */}
+
         <section className="how-it-works">
           <h2>How It Works</h2>
           <div className="steps">
@@ -349,7 +345,6 @@ function Home() {
           </div>
         </section>
 
-        {/* ===== ABOUT/PARTNERS ===== */}
         <section className="about-partners">
           <h2>Our Partners</h2>
           <p>

@@ -3,7 +3,7 @@ import React from "react";
 function Footer() {
   return (
     <>
-      {/* ======= Inline CSS ======= */}
+ 
       <style>{`
         :root {
           --burgundy: #800020;
@@ -101,10 +101,9 @@ function Footer() {
         }
       `}</style>
 
-      {/* ======= Footer Component ======= */}
       <footer>
         <div className="footer-container">
-          {/* === About EduVault === */}
+
           <div className="footer-column">
             <h3>About EduVault</h3>
             <p>
@@ -114,7 +113,7 @@ function Footer() {
             </p>
           </div>
 
-          {/* === Quick Links === */}
+
           <div className="footer-column">
             <h3>Quick Links</h3>
             <ul className="footer-links">
@@ -133,7 +132,6 @@ function Footer() {
             </ul>
           </div>
 
-          {/* === Socials === */}
           <div className="footer-column">
             <h3>Follow Us</h3>
             <div className="social-icons">
@@ -153,13 +151,12 @@ function Footer() {
           </div>
         </div>
 
-        {/* === Bottom Line === */}
         <div className="footer-bottom">
           © {new Date().getFullYear()} EduVault. Built on trust, powered by technology.
         </div>
       </footer>
 
-      {/* === FontAwesome for Icons === */}
+
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
