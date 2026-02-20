@@ -1,23 +1,40 @@
-// Sidebar.jsx
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaQrcode,
   FaCheckCircle,
   FaHistory,
   FaChevronRight,
   FaChevronLeft,
+  FaUser,
+  faSearch, 
+  FaSearch,
 } from "react-icons/fa";
 
-function Sidebar({ role = "verifier", activeTab, setActiveTab }) {
+function Sidebar({ role, userId, isProfileComplete }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showLockPopup, setShowLockPopup] = useState(false);
 
-  const menuItems = {
-    verifier: [
-      { name: "Scan QR", key: "scan", icon: <FaQrcode /> },
-      { name: "Manual Verify", key: "manual", icon: <FaCheckCircle /> },
-      { name: "Request History", key: "history", icon: <FaHistory /> },
-    ],
-  };
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (userId) {
+      sessionStorage.setItem("userId", userId);
+    }
+  }, [userId]);
+  
+  const effectiveUserId = userId || sessionStorage.getItem("userId");
+  
+  console.log("📦 Sidebar effective userId:", effectiveUserId);
+
+  // 🔹 VERIFIER MENU
+  const menuItems = [
+    { name: "Scan QR", path: "/verifier-dashboard/scan", icon: <FaQrcode /> },
+    { name: "Find document", path: "/verifier-dashboard/find-document", icon: <FaSearch /> },
+    { name: "Activity Logs", path: "/verifier-dashboard/logs", icon: <FaHistory /> },
+    { name: "Profile", path: "/verifier-dashboard/profile", icon: <FaUser /> },
+  ];
 
   return (
     <>
@@ -33,21 +50,19 @@ function Sidebar({ role = "verifier", activeTab, setActiveTab }) {
           height: calc(100vh - 65px);
           background-color: var(--burgundy);
           color: var(--gold);
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
           position: fixed;
           top: 70px;
           left: 0;
+          display: flex;
+          flex-direction: column;
           box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
           border-right: 2px solid rgba(255, 215, 0, 0.4);
           transition: all 0.3s ease-in-out;
-          overflow-y: auto;
           z-index: 90;
         }
 
         .sidebar-nav {
-          padding: 1rem 1rem;
+          padding: 1rem;
           margin-top: 1rem;
         }
 
@@ -58,11 +73,10 @@ function Sidebar({ role = "verifier", activeTab, setActiveTab }) {
           padding: 0.9rem 1rem;
           color: var(--gold);
           border-radius: 12px;
-          text-decoration: none;
           font-weight: 500;
+          cursor: pointer;
           transition: all 0.3s ease;
           margin-bottom: 0.75rem;
-          cursor: pointer;
         }
 
         .sidebar-link:hover {
@@ -99,23 +113,9 @@ function Sidebar({ role = "verifier", activeTab, setActiveTab }) {
             display: none;
           }
 
-          .sidebar.expanded .sidebar-link span:last-child {
-            display: inline;
-          }
-
           .sidebar:not(.expanded) .sidebar-link {
             justify-content: center;
             padding: 1rem 0;
-            border-radius: 10%;
-            width: 40px;
-            height: 14px;
-            margin: 0.6rem 0rem;
-            
-          }
-
-          .sidebar:not(.expanded) .sidebar-link:hover {
-            background-color: var(--gold-light);
-            transform: scale(1.05);
           }
 
           .sidebar-toggle {
@@ -129,20 +129,13 @@ function Sidebar({ role = "verifier", activeTab, setActiveTab }) {
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            margin-top: 1rem;
-            margin-left: 1rem;
-            transition: all 0.3s ease;
-          }
-
-          .sidebar-toggle:hover {
-            background-color: #9b1d30;
-            transform: scale(1.05);
+            margin: 1rem;
           }
         }
 
         @media (min-width: 993px) {
           .sidebar-toggle {
-            display: none !important;
+            display: none;
           }
         }
       `}</style>
@@ -153,13 +146,22 @@ function Sidebar({ role = "verifier", activeTab, setActiveTab }) {
         </div>
 
         <nav className="sidebar-nav">
-          {menuItems[role].map((item) => (
+          {menuItems.map((item) => (
             <div
-              key={item.key}
-              className={`sidebar-link ${activeTab === item.key ? "active" : ""}`}
+              key={item.path}
+              className={`sidebar-link ${
+                location.pathname === item.path ? "active" : ""
+              }`}
               onClick={() => {
-                setActiveTab(item.key);
-                setIsOpen(false);
+                if (
+                  !isProfileComplete &&
+                  item.path !== "/verifier-dashboard/profile"
+                ) {
+                  setShowLockPopup(true);
+                } else {
+                  navigate(item.path);
+                  setIsOpen(false);
+                }
               }}
             >
               <span className="sidebar-icon">{item.icon}</span>
@@ -168,6 +170,47 @@ function Sidebar({ role = "verifier", activeTab, setActiveTab }) {
           ))}
         </nav>
       </aside>
+
+      {/* 🔒 LOCK POPUP */}
+      {showLockPopup && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              padding: "1.8rem 2rem",
+              borderRadius: "14px",
+              textAlign: "center",
+              maxWidth: "320px",
+            }}
+          >
+            <div style={{ fontSize: "2.5rem" }}>🔒</div>
+            <h3 style={{ color: "#800020" }}>Profile Incomplete</h3>
+            <p>Please complete your profile to continue.</p>
+            <button
+              style={{
+                background: "#FFD700",
+                border: "none",
+                padding: "0.4rem 1.2rem",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowLockPopup(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

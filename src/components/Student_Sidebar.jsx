@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   FaFileAlt,
@@ -9,9 +9,10 @@ import {
   FaChevronLeft,
 } from "react-icons/fa";
 
-function Sidebar({ role = "student" }) {
+function Sidebar({ role = "student", userId, isProfileComplete }) {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [showLockPopup, setShowLockPopup] = useState(false);
 
   const menuItems = {
     student: [
@@ -24,9 +25,20 @@ function Sidebar({ role = "student" }) {
 
   const isActive = (path) => location.pathname === path;
 
+  
+useEffect(() => {
+  if (userId) {
+    sessionStorage.setItem("userId", userId);
+  }
+}, [userId]);
+
+const effectiveUserId = userId || sessionStorage.getItem("userId");
+
+console.log("📦 Sidebar effective userId:", effectiveUserId);
+
   return (
     <>
-      <style>{`
+     <style>{`
         :root {
           --burgundy: #800020;
           --gold: #FFD700;
@@ -169,10 +181,8 @@ function Sidebar({ role = "student" }) {
             display: none !important;
           }
       `}</style>
-
-
+      
       <aside className={`sidebar ${isOpen ? "expanded" : ""}`}>
-
         <div className="sidebar-toggle" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
         </div>
@@ -180,17 +190,63 @@ function Sidebar({ role = "student" }) {
         <nav className="sidebar-nav">
           {menuItems[role].map((item) => (
             <Link
-              key={item.name}
-              to={item.path}
-              className={`sidebar-link ${isActive(item.path) ? "active" : ""}`}
-              onClick={() => setIsOpen(false)}
-            >
+                key={item.name}
+                to={item.path}
+                state={{ userId: effectiveUserId }}
+                className={`sidebar-link ${isActive(item.path) ? "active" : ""}`}
+                onClick={(e) => {
+                  if (!isProfileComplete && item.path !== "/student-dashboard/profile") {
+                    e.preventDefault();
+                    setShowLockPopup(true);
+                  } else {
+                    setIsOpen(false);
+                  }
+                }}
+              >
+
               <span className="sidebar-icon">{item.icon}</span>
               <span>{item.name}</span>
             </Link>
           ))}
         </nav>
       </aside>
+
+      {/* 🔒 LOCK POPUP */}
+      {showLockPopup && (
+        <div style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.45)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999
+        }}>
+          <div style={{
+            background: "#fff",
+            padding: "1.8rem 2rem",
+            borderRadius: "14px",
+            textAlign: "center",
+            maxWidth: "320px"
+          }}>
+            <div style={{ fontSize: "2.5rem" }}>🔒</div>
+            <h3 style={{ color: "#800020" }}>Profile Incomplete</h3>
+            <p>Please complete your profile to continue.</p>
+            <button
+              style={{
+                background: "#FFD700",
+                border: "none",
+                padding: "0.4rem 1.2rem",
+                borderRadius: "6px",
+                cursor: "pointer"
+              }}
+              onClick={() => setShowLockPopup(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
