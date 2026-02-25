@@ -6,6 +6,7 @@ import ForgotPassword from "./Screens/ForgotPassword";
 import ResetPassword from "./Screens/ResetPassword";
 import Contact from "./Screens/Contact";
 import About from "./Screens/About";
+import PublicVerify from "./Screens/PublicVerify";
 
 
 
@@ -63,6 +64,8 @@ function App() {
         <Route path="/verifier-dashboard/find-document" element={<FindDocument />} />
         <Route path="/verifier-dashboard/scan" element={<ScanQR />} />
         <Route path="/verifier-dashboard/logs" element={<VerifierActivityLogs />} />
+
+        <Route path="/verify/:documentId" element={<PublicVerify />} />
 
 
       </Routes>
