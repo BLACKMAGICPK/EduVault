@@ -8,7 +8,6 @@ import Contact from "./Screens/Contact";
 import About from "./Screens/About";
 
 
-import VerifierDashboard from "./Screens/VerifierDashboard";
 
 import StudentProfile from "./Screens/StudentDashboard/StudentProfile";
 import VerifierProfile from "./Screens/VerifierDashboard/VerifierProfile";
