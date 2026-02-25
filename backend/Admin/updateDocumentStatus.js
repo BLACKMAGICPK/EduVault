@@ -14,7 +14,7 @@ module.exports = function (app, client) {
       .digest("hex");
 
     const verificationUrl =
-      `http://localhost:5000/verify/${documentId}?sig=${signature}`;
+      `https://eduvault-gold.vercel.app/verify/${documentId}?sig=${signature}`;
 
     const qrImage = await QRCode.toDataURL(verificationUrl, {
       errorCorrectionLevel: "H",
